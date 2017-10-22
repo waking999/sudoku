@@ -4,31 +4,36 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class Sudoku {
-	static int n=9; //the range of the values is [1,n] 
-	static int pn=(int)Math.sqrt(n);
-	static int sn=n*n;
-	
-	static boolean validBoard(int[][] board) {
+	static int n = 9; // the range of the values is [1,n]
+	static int pn = (int) Math.sqrt(n);
+	static int sn = n * n;
+
+	static boolean validBoard(int[] board) {
 		int[] expect = new int[n];
-		for(int i=0;i<n;i++){
-			expect[i]=i+1;
-		}
-		
-	 
 		for (int i = 0; i < n; i++) {
-			int[] row = Arrays.copyOf(board[i], board[i].length);
+			expect[i] = i + 1;
+		}
+
+		for (int i = 0; i < n; i++) {
+			int[] row = new int[n];
+			for (int j = 0; j < n; j++) {
+				int cell = Util.getCellByXY(i, j, n);
+				row[j] = board[cell];
+			}
+
 			Arrays.sort(row);
 			if (!Util.verifySort(expect, row)) {
 				return false;
 			}
 		}
 
-		for (int j = 0; j <n; j++) {
+		for (int j = 0; j < n; j++) {
 			int[] col = new int[n];
 			for (int i = 0; i < n; i++) {
-				col[i] = board[i][j];
+				int cell = Util.getCellByXY(i, j, n);
+
+				col[i] = board[cell];
 			}
 			Arrays.sort(col);
 			if (!Util.verifySort(expect, col)) {
@@ -36,13 +41,14 @@ public class Sudoku {
 			}
 		}
 
-		System.out.println("pn="+pn);
+		System.out.println("pn=" + pn);
 		for (int k = 0; k < n; k++) {
 			int[] piece = new int[n];
-			
+
 			for (int i = 0; i < pn; i++) {
 				for (int j = 0; j < pn; j++) {
-					piece[i * pn + j] = board[(k / pn) * pn + i][(k % pn) * pn + j];
+					int cell = Util.getCellByXY((k / pn) * pn + i, (k % pn) * pn + j, n);
+					piece[i * pn + j] = board[cell];
 				}
 			}
 			Arrays.sort(piece);
@@ -66,7 +72,7 @@ public class Sudoku {
 			int count = vPoss[0];
 			for (int i = 1; i <= count; i++) {
 				int cell = vPoss[i];
-				int[] xy=Util.getXYByCell( cell);
+				int[] xy = Util.getXYByCell(cell, n);
 				int x = xy[0];
 				int y = xy[1];
 				// x axis
@@ -105,8 +111,8 @@ public class Sudoku {
 				// piece
 				int left = (x / pn) * pn;
 				int up = (y / pn) * pn;
-				for (int row = 0; row <= pn-1; row++) {
-					for (int col = 0; col <= pn-1; col++) {
+				for (int row = 0; row <= pn - 1; row++) {
+					for (int col = 0; col <= pn - 1; col++) {
 						int newCell = (left + row) * n + (up + col);
 						if (data.cellPossiblity[newCell][0] > 1) {
 							swap(data.cellPossiblity[newCell], v + 1);
@@ -155,15 +161,15 @@ public class Sudoku {
 		}
 		data.valPossiblityList = numPos;
 	}
-	
+
 	static void setBoard(SudokuData data) {
 		for (int cell = 0; cell < sn; cell++) {
 			if (data.cellPossiblity[cell][0] == 1) {
 				int v = data.cellPossiblity[cell][1];
-				int[] xy=Util.getXYByCell( cell);
-				int x = xy[0];
-				int y = xy[1];
-				data.board[x][y] = v;
+				// int[] xy=Util.getXYByCell( cell,n);
+				// int x = xy[0];
+				// int y = xy[1];
+				data.board[cell] = v;
 
 				int pos = Util.getValPos(data.valExistence[v - 1], cell);
 				if (pos == -1) {
@@ -215,11 +221,11 @@ public class Sudoku {
 			calNumPossiblity(data);
 		}
 		System.out.println();
-		for (int cell = 0; cell < 81; cell++) {
-			int[] xy=Util.getXYByCell( cell);
-			int x = xy[0];
-			int y = xy[1];
-			if (data.board[x][y] == 0) {
+		for (int cell = 0; cell < sn; cell++) {
+			// int[] xy=Util.getXYByCell( cell,n);
+			// int x = xy[0];
+			// int y = xy[1];
+			if (data.board[cell] == 0) {
 				int count = data.cellPossiblity[cell][0];
 				System.out.print(cell + ":");
 				for (int i = 1; i <= count; i++) {
@@ -233,7 +239,7 @@ public class Sudoku {
 	}
 
 	static void reductionRule3(SudokuData data) {
-		for (int v = 0; v <n; v++) {
+		for (int v = 0; v < n; v++) {
 			List<Integer> listA = data.valPossiblityList[v];
 			for (int cell : listA) {
 				if (Util.isOnly(cell, listA)) {
@@ -245,10 +251,10 @@ public class Sudoku {
 
 	private static void setCellVal(SudokuData data, int v, int cell) {
 		swapFlag = true;
-		int[] xy=Util.getXYByCell( cell);
-		int x = xy[0];
-		int y = xy[1];
-		data.board[x][y] = v + 1;
+		// int[] xy=Util.getXYByCell( cell,n);
+		// int x = xy[0];
+		// int y = xy[1];
+		data.board[cell] = v + 1;
 
 		int vPossibleCount = data.valExistence[v][0] + 1;
 		data.valExistence[v][0] = vPossibleCount;

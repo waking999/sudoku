@@ -16,7 +16,7 @@ public class SudokuTest {
 	public void testValidBoard() throws IOException {
 		log.debug("testValidBoard");
 		String fileName = TestUtil.getCurrentPath() + "/src/test/resources/game1ans.txt";
-		int[][] board = FileOperation.readAnsFile(fileName);
+		int[] board = FileOperation.readAnsFile(fileName);
 		Util.printBoard(board);
 		boolean output = Sudoku.validBoard(board);
 		Assert.assertTrue(output);

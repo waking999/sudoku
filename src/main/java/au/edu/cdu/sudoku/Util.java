@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Util {
+	static int n=9;
 	/**
 	 * verify if the output is the same as expect
 	 * 
@@ -28,9 +29,9 @@ public class Util {
 	/**
 	 * print board
 	 */
-	static void printBoard(int[][] board) {
+	static void printBoard(int[] board) {
 
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < n; i++) {
 			if (i == 0) {
 				System.out.println("-------------------");
 			} else {
@@ -43,9 +44,10 @@ public class Util {
 
 			for (int j = 0; j < 9; j++) {
 				System.out.print("|");
-				if (board[i][j] > 0) {
+				int cell=Util.getCellByXY(i, j, n);
+				if (board[cell] > 0) {
 
-					System.out.print(board[i][j]);
+					System.out.print(board[cell]);
 
 				} else {
 					System.out.print(" ");
@@ -176,11 +178,16 @@ public class Util {
 		return false;
 	}
 
-	static int[] getXYByCell(int cell) {
+	static int[] getXYByCell(int cell, int n) {
 		int[] ret = new int[2];
-		ret[0] = cell / 9;
-		ret[1] = cell % 9;
+		ret[0] = cell / n;
+		ret[1] = cell % n;
 		return ret;
+	}
+	
+	static int getCellByXY(int x,int y,int n) {
+		int cell= x*n+y;
+		return cell;
 	}
 
 	static int getValPos(int[] array, int val) {

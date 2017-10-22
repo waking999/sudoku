@@ -16,8 +16,8 @@ public class FileOperationTest {
 		String fileName = TestUtil.getCurrentPath() + "/src/test/resources/game1.txt";
 		SudokuData data = FileOperation.readFile(fileName);
 
-		int[][] board = data.board;
-		Assert.assertTrue(board[0][0] == 1);
+		int[] board = data.board;
+		Assert.assertTrue(board[0] == 1);
 		Util.printBoard(board);
 	}
 

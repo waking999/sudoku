@@ -21,8 +21,9 @@ public class FileOperation {
 			int x = Integer.parseInt(vals[0]);
 			int y = Integer.parseInt(vals[1]);
 			int v = Integer.parseInt(vals[2]);
-			data.board[x][y] = v;
-			int cell = x * n + y;
+			int cell=Util.getCellByXY(x, y, n);
+			data.board[cell] = v;
+			 
 			data.cellPossiblity[cell] = new int[] { 1, v };
 			for (int j = 0; j < n; j++) {
 				data.valPossiblityBool[j][cell] = false;
@@ -36,18 +37,19 @@ public class FileOperation {
 		return data;
 	}
 
-	static int[][] readAnsFile(String filePath) throws IOException {
+	static int[] readAnsFile(String filePath) throws IOException {
 		int n=9;
 		Path path = Paths.get(filePath);
 		List<String> lines = Files.readAllLines(path, Charset.defaultCharset());
-		int[][] board = new int[n][n];
-		for (int i = 0; i < n; i++) {
-			Arrays.fill(board[i], -1);
+		int[] board = new int[n*n];
+		for (int i = 0; i < n*n; i++) {
+			Arrays.fill(board, 0);
 		}
 		for (int i = 0; i < lines.size(); i++) {
 			String[] vals = lines.get(i).split(",");
 			for (int j = 0; j < n; j++) {
-				board[i][j] = Integer.parseInt(vals[j]);
+				int cell=Util.getCellByXY(i, j, n);
+				board[cell] = Integer.parseInt(vals[j]);
 			}
 		}
 		return board;
